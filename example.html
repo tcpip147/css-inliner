@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="css-inliner.js"></script>
+    <style>
+        .normal {
+            width: 100px;
+            height: 100px;
+        }
+
+        .important {
+            width: 200px !important;
+            height: 100px;
+        }
+
+        div {
+            width: 50px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <span style="display: block;">
+        <div class="normal"></div>
+        <div class="important"></div>
+    </span>
+
+    <span id="inline" style="display: block; margin-top: 50px;">
+        <div class="normal"></div>
+        <div class="important"></div>
+    </span>
+
+    <script>
+        new CSSInliner().convert(document.getElementById("inline"));
+    </script>
+</body>
+
+</html>
