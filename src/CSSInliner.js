@@ -3,6 +3,8 @@ import { calculate, compare } from "./CSSSpecificity.js";
 function CSSInliner() {
 }
 
+CSSInliner.prototype.calculate = calculate;
+
 CSSInliner.prototype.inlineAll = function () {
     const inlineDeclarations = {};
     let nextId = 0;

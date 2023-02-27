@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,16 +9,34 @@
     <link rel="stylesheet" href="example.css">
     <script src="css-inliner.js"></script>
 </head>
+
 <body>
-    <style>
-        div {
-            font-size: 50px;
-        }
-    </style>
-    <h3>DD</h3>
-    <div id="normal" style="font-size: 30px">Hello, Stylesd</div>
+    <div>referenced in <a href="https://www.w3.org/TR/selectors-3/#specificity">CSS Selector Level 3</a></div>
+    <div class="green" style="color: red; font-size: 24px; border: 1px solid blue; margin-bottom: 0;">This is a green text.</div>
     <script>
-        new CSSInliner().inlineAll();
+        var CSSInliner = new CSSInliner();
+        CSSInliner.inlineAll();
+    </script>
+    <script>
+        // specificity algorithm test
+        test("*", [0, 0, 0]);
+        test("#div", [1, 0, 0]);
+        test(".div", [0, 1, 0]);
+        test("[value='1']", [0, 1, 0]);
+        test(":hover", [0, 1, 0]);
+        test("div", [0, 0, 1]);
+        test("::after", [0, 0, 1]);
+        test("div:nth-child(3)", [0, 1, 1]);
+
+        function test(selector, expect) {
+            var score = CSSInliner.calculate(selector);
+            if (expect[0] == score.A && expect[1] == score.B && expect[2] == score.C) {
+                console.log(selector + " OK");
+            } else {
+                console.error("A selector '" + selector + "' Error expect: [" + expect[0] + ", " + expect[1] + ", " + expect[2] + "] but actual: [" + score.A + ", " + score.B + ", " + score.C + "]");
+            }
+        }
     </script>
 </body>
+
 </html>

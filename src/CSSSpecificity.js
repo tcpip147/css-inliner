@@ -1,3 +1,6 @@
+/**
+ * referenced in https://www.w3.org/TR/selectors-3/#specificity
+ */
 function calculate(text) {
     const score = { A: 0, B: 0, C: 0 };
     const tokens = tokenize(text);
