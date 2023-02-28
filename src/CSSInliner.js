@@ -30,12 +30,14 @@ CSSInliner.prototype.inlineAll = function () {
         for (let i = 0; i < document.styleSheets.length; i++) {
             const cssRules = document.styleSheets[i].cssRules;
             for (let j = 0; j < cssRules.length; j++) {
-                const selectors = cssRules[j].selectorText.split(",");
-                for (let k = 0; k < selectors.length; k++) {
-                    collapsed.push({
-                        selectorText: selectors[k].trim(),
-                        style: cssRules[j].style
-                    });
+                if (cssRules[j].selectorText != null) {
+                    const selectors = cssRules[j].selectorText.split(",");
+                    for (let k = 0; k < selectors.length; k++) {
+                        collapsed.push({
+                            selectorText: selectors[k].trim(),
+                            style: cssRules[j].style
+                        });
+                    }
                 }
             }
         }
@@ -65,6 +67,13 @@ CSSInliner.prototype.inlineAll = function () {
         var newobj = {};
         for (var key in obj) {
             newobj[key] = obj[key];
+        }
+
+        // IE11 Compatibility
+        if (obj.length > 0 && !newobj[0]) {
+            for (var i = 0; i < obj.length; i++) {
+                newobj[i] = obj[i];
+            }
         }
         return newobj;
     }
