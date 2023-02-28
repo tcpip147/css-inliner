@@ -9,11 +9,11 @@ function CSSInliner() {
         inlineDeclarations = {};
         nextId = 0;
 
-        for (var i = 0; i < orderedSelectors.length; i++) {
-            var selectorText = orderedSelectors[i].selectorText;
-            var declaration = orderedSelectors[i].style;
-            var els = document.querySelectorAll(selectorText);
-            for (var j = 0; j < els.length; j++) {
+        for (let i = 0; i < orderedSelectors.length; i++) {
+            const selectorText = orderedSelectors[i].selectorText;
+            const declaration = orderedSelectors[i].style;
+            const els = document.querySelectorAll(selectorText);
+            for (let j = 0; j < els.length; j++) {
                 if (isInParentNode(element, els[j])) {
                     backupInlineStyles(els[j]);
                     setStyles(els[j], declaration);
@@ -21,7 +21,7 @@ function CSSInliner() {
             }
         }
 
-        for (var id in inlineDeclarations) {
+        for (let id in inlineDeclarations) {
             setInlineStyles(inlineDeclarations[id]);
             delete inlineDeclarations[id].element.dataset.cssInlinerId;
         }
@@ -31,17 +31,17 @@ function CSSInliner() {
         inlineDeclarations = {};
         nextId = 0;
 
-        for (var i = 0; i < orderedSelectors.length; i++) {
-            var selectorText = orderedSelectors[i].selectorText;
-            var declaration = orderedSelectors[i].style;
-            var els = document.querySelectorAll(selectorText);
-            for (var j = 0; j < els.length; j++) {
+        for (let i = 0; i < orderedSelectors.length; i++) {
+            const selectorText = orderedSelectors[i].selectorText;
+            const declaration = orderedSelectors[i].style;
+            const els = document.querySelectorAll(selectorText);
+            for (let j = 0; j < els.length; j++) {
                 backupInlineStyles(els[j]);
                 setStyles(els[j], declaration);
             }
         }
 
-        for (var id in inlineDeclarations) {
+        for (let id in inlineDeclarations) {
             setInlineStyles(inlineDeclarations[id]);
             delete inlineDeclarations[id].element.dataset.cssInlinerId;
         }
@@ -97,14 +97,14 @@ function CSSInliner() {
     }
 
     function deepcopy(obj) {
-        var newobj = {};
-        for (var key in obj) {
+        const newobj = {};
+        for (let key in obj) {
             newobj[key] = obj[key];
         }
 
         // IE11 Compatibility
         if (obj.length > 0 && !newobj[0]) {
-            for (var i = 0; i < obj.length; i++) {
+            for (let i = 0; i < obj.length; i++) {
                 newobj[i] = obj[i];
             }
         }
@@ -112,17 +112,17 @@ function CSSInliner() {
     }
 
     function copyImportant(declaration) {
-        var important = {};
-        for (var i = 0; i < declaration.length; i++) {
+        const important = {};
+        for (let i = 0; i < declaration.length; i++) {
             important[declaration[i]] = declaration.getPropertyPriority(declaration[i]);
         }
         return important;
     }
 
     function setStyles(el, declaration) {
-        for (var i = 0; i < declaration.length; i++) {
-            var styleName = declaration[i];
-            var property = declaration.getPropertyPriority(styleName);
+        for (let i = 0; i < declaration.length; i++) {
+            const styleName = declaration[i];
+            const property = declaration.getPropertyPriority(styleName);
             if (el.style.getPropertyPriority(styleName) == "important" && property != "important") {
                 continue;
             } else if (property == "important") {
@@ -134,13 +134,13 @@ function CSSInliner() {
     }
 
     function setInlineStyles(inlineDeclaration) {
-        for (var i = 0; i < inlineDeclaration.declaration.length; i++) {
-            var declaration = inlineDeclaration.declaration;
-            var important = inlineDeclaration.important;
-            var el = inlineDeclaration.element;
-            var styleName = declaration[i];
-            var styleNameCamelcase = styleName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, c) => c.toUpperCase());
-            var property = important[styleName];
+        for (let i = 0; i < inlineDeclaration.declaration.length; i++) {
+            const declaration = inlineDeclaration.declaration;
+            const important = inlineDeclaration.important;
+            const el = inlineDeclaration.element;
+            const styleName = declaration[i];
+            const styleNameCamelcase = styleName.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, c) => c.toUpperCase());
+            const property = important[styleName];
             if (el.style.getPropertyPriority(styleName) == "important" && property != "important") {
                 continue;
             } else if (property == "important") {
