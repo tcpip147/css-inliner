@@ -1,28 +1,61 @@
 import { calculate, compare } from "./CSSSpecificity.js";
 
 function CSSInliner() {
-}
-
-CSSInliner.prototype.calculate = calculate;
-
-CSSInliner.prototype.inlineAll = function () {
-    const inlineDeclarations = {};
-    let nextId = 0;
+    let inlineDeclarations;
+    let nextId;
     const orderedSelectors = orderBySpecificity(collapseSelectors());
 
-    for (var i = 0; i < orderedSelectors.length; i++) {
-        var selectorText = orderedSelectors[i].selectorText;
-        var declaration = orderedSelectors[i].style;
-        var els = document.querySelectorAll(selectorText);
-        for (var j = 0; j < els.length; j++) {
-            backupInlineStyles(els[j]);
-            setStyles(els[j], declaration);
+    function inline(element) {
+        inlineDeclarations = {};
+        nextId = 0;
+
+        for (var i = 0; i < orderedSelectors.length; i++) {
+            var selectorText = orderedSelectors[i].selectorText;
+            var declaration = orderedSelectors[i].style;
+            var els = document.querySelectorAll(selectorText);
+            for (var j = 0; j < els.length; j++) {
+                if (isInParentNode(element, els[j])) {
+                    backupInlineStyles(els[j]);
+                    setStyles(els[j], declaration);
+                }
+            }
+        }
+
+        for (var id in inlineDeclarations) {
+            setInlineStyles(inlineDeclarations[id]);
+            delete inlineDeclarations[id].element.dataset.cssInlinerId;
         }
     }
 
-    for (var id in inlineDeclarations) {
-        setInlineStyles(inlineDeclarations[id]);
-        delete inlineDeclarations[id].element.dataset.cssInlinerId;
+    function inlineAll() {
+        inlineDeclarations = {};
+        nextId = 0;
+
+        for (var i = 0; i < orderedSelectors.length; i++) {
+            var selectorText = orderedSelectors[i].selectorText;
+            var declaration = orderedSelectors[i].style;
+            var els = document.querySelectorAll(selectorText);
+            for (var j = 0; j < els.length; j++) {
+                backupInlineStyles(els[j]);
+                setStyles(els[j], declaration);
+            }
+        }
+
+        for (var id in inlineDeclarations) {
+            setInlineStyles(inlineDeclarations[id]);
+            delete inlineDeclarations[id].element.dataset.cssInlinerId;
+        }
+    }
+
+    function isInParentNode(parent, child) {
+        let node = child.parentNode;
+        while (node != null) {
+            if (parent == node) {
+                return true;
+            }
+            node = node.parentNode;
+        }
+        return false;
     }
 
     function collapseSelectors() {
@@ -117,6 +150,10 @@ CSSInliner.prototype.inlineAll = function () {
             }
         }
     }
-};
+
+    CSSInliner.prototype.calculate = calculate;
+    CSSInliner.prototype.inlineAll = inlineAll;
+    CSSInliner.prototype.inline = inline;
+}
 
 export default CSSInliner;

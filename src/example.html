@@ -12,10 +12,13 @@
 
 <body>
     <div>referenced in <a href="https://www.w3.org/TR/selectors-3/#specificity">CSS Selector Level 3</a></div>
-    <div class="green" style="color: red; font-size: 24px; border: 1px solid blue; margin-bottom: 0;">This is a green text.</div>
+    <div id="target" style="margin-bottom: 0;">
+        <div class="green" style="color: red; font-size: 24px; border: 1px solid blue;">This must have a inline style that color is green.</div>
+    </div>
     <script>
         var CSSInliner = new CSSInliner();
-        CSSInliner.inlineAll();
+        CSSInliner.inline(document.getElementById("target"));
+        // CSSInliner.inlineAll();
     </script>
     <script>
         // specificity algorithm test
