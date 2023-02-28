@@ -5,7 +5,7 @@ function CSSInliner() {
     let nextId;
     const orderedSelectors = orderBySpecificity(collapseSelectors());
 
-    function inline(element) {
+    function inline(elements) {
         inlineDeclarations = {};
         nextId = 0;
 
@@ -14,7 +14,7 @@ function CSSInliner() {
             const declaration = orderedSelectors[i].style;
             const els = document.querySelectorAll(selectorText);
             for (let j = 0; j < els.length; j++) {
-                if (isInParentNode(element, els[j])) {
+                if (isInParentNode(elements, els[j])) {
                     backupInlineStyles(els[j]);
                     setStyles(els[j], declaration);
                 }
@@ -47,11 +47,19 @@ function CSSInliner() {
         }
     }
 
-    function isInParentNode(parent, child) {
+    function isInParentNode(parents, child) {
         let node = child.parentNode;
         while (node != null) {
-            if (parent == node) {
-                return true;
+            if (parents.length) {
+                for (let i = 0; i < parents.length; i++) {
+                    if (parents[i] == node) {
+                        return true;
+                    }
+                }
+            } else {
+                if (parents == node) {
+                    return true;
+                }
             }
             node = node.parentNode;
         }
